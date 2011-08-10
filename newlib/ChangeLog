@@ -1,3 +1,382 @@
+2011-08-01  Sebastian Huber <sebastian.huber@embedded-brains.de>
+
+	* libc/include/sys/types.h: XML and RTEMS define
+	_UNIX98_THREAD_MUTEX_ATTRIBUTES and can use the standard
+	definitions. This avoids redefinition warnings.
+
+2011-07-26  Ralf Corsépius <ralf.corsepius@rtems.org>
+
+	* libc/sys/rtems/sys/dirent.h (scandir):
+	Add const to "select" parameter.
+
+2011-07-25  Ralf Corsépius  <ralf.corsepius@rtems.org>
+
+	* libc/iconv/iconv.tex: Rename node "Introduction" into
+	"Introduction to iconv".
+
+2011-07-20  Yaakov Selkowitz  <yselkowitz@...>
+
+	* libc/include/time.h [_POSIX_CLOCK_SELECTION] (clock_nanosleep):
+	Declare.
+	* libc/include/sys/features.h [__CYGWIN__] (_POSIX_CLOCK_SELECTION):
+	Define.
+
+2011-07-19  Yaakov Selkowitz  <yselkowitz@users.sourceforge.net>
+
+	* libc/include/sys/unistd.h (_CS_XBS5_WIDTH_RESTRICTED_ENVS): Define.
+	(_CS_V6_ENV): Fix definition.
+
+2011-07-19  Ralf Corsépius <ralf.corsepius@rtems.org>
+
+	* libc/locale/lmessages.c (_C_messages_locale):
+	Move __HAVE_LOCALE_INFO_EXTENDED__ before codeset.
+
+2011-07-19  Matt Johnson  <johnso87@crhc.illinois.edu>
+
+	* libc/reent/sbrkr.c: Define _sbrk_r independently of the definition
+	of MALLOC_PROVIDED.
+
+2011-07-15  Yufeng Zhang  <yufeng.zhang@arm.com>
+
+	* libc/stdio/vfwprintf.c (wcvt): Add a new parameter len of type
+	int.  *length is set to the value of (rev - digits) regardless
+	of whether _MB_CAPABLE is defined or not.  Replace BUF with len
+	in calling _mbsnrtowcs_r and also in the loop where _MB_CAPABLE
+	is not defined.
+	(_VFWPRINTF_R): Call wcvt with an extra argument.  Call wcvt
+	again with allocated new buffer if buf is not large enough for
+	the conversion.
+	* testsuite/newlib.stdio/stdio.exp: New.
+	* testsuite/newlib.stdio/swprintf.c: Likewise.
+
+2011-07-15  Matt Johnson  <johnso87@crhc.illinois.edu>
+
+	* libc/stdio/fscanf.c (fscanf): Call _vfscanf_r instead of __svfscanf_r
+	to make sure CHECK_INIT is called.
+	(_fscanf_r): Ditto.
+	* /libc/stdio/scanf.c (scanf): Ditto.
+	(_scanf_r): Ditto.
+	* libc/stdio/fwscanf.c (fwscanf): Call _vfwscanf_r instead of
+	__svfwscanf_r to make sure CHECK_INIT is called.
+	(_fwscanf_r): Ditto.
+	* libc/stdio/wscanf.c (wscanf): Ditto.
+	(_wscanf_r): Ditto.
+
+2011-07-13  Hans-Peter Nilsson <hp@axis.com>
+
+	* libm/complex/cacos.c: Use temporaries and correct sequencing
+	error in previous reordering change.
+
+2011-06-25  Andreas Becker  <becker@se-elektronic.de>
+
+	* libc/time/mktime.c (mktime): Lock global timezone info while
+	accessing it.
+
+2011-06-14  Philip Munts  <phil@munts.net>
+
+	* libc/time/asctime_r.c (asctime_r): Replace call to sprintf with call
+	to siprintf.
+	* libc/time/strftime.c: Define snprintf to sniprintf in multibyte case.
+	* libc/time/tzset_r.c: Define sscanf to siscanf.
+
+2011-06-14  Joseph Myers  <joseph@codesourcery.com>
+
+	* configure.host: Don't handle ep9312, strongarm, xscale and thumb
+	target names.
+	* libc/machine/configure.in: Don't handle xscale target names.
+	* libc/machine/configure: Regenerate.
+
+2011-06-14  Craig Howland <howland@LGSInnovations.com>
+
+	* libc/time/tzset_r.c (tzset_r):  Correct behavior for changing from
+	non-GMT to GMT, when un-setting TZ.  Set _timezone and _daylight even
+	if no DST is given in TZ.
+
+2011-06-13  Eric Blake  <eblake@redhat.com>
+
+	* libc/stdio/wsetup.c (__swsetup_r): Set errno on failure.
+	* libc/stdio/fvwrite.c (__sfvwrite_r): Simplify.
+	* libc/stdio/wbuf.c (__swbuf_r): Likewise.
+	* libc/stdio/local.h (cantwrite): Adjust comment.
+
+2011-06-09  Yaakov Selkowitz  <yselkowitz@...>
+
+	* libc/include/string.h (strdupa): New macro function.
+	(strndupa): New macro function.
+
+2011-05-27  Nick Clifton  <nickc@redhat.com>
+
+	* libc/sys/sysnecv850/sbrk.c (_sbrk): Tidy code.
+	Base start of heap on the "heap_start" symbol.
+
+2011-05-25  Eric Blake  <eblake@redhat.com>
+
+	* libc/string/strerror.c (_strerror_r): Report "Success" for 0.
+
+2011-05-25  Eric Blake  <eblake@redhat.com>
+
+	* libc/string/strerror.c (strerror): Split body into...
+	(_strerror_r): ...new reentrant function.
+	* libc/string/u_strerr.c (_user_strerror): Update signature.
+	* libc/include/string.h (_strerror_r): New prototype.
+	* libc/posix/collate.c (__collate_err): Adjust callers.
+	* libc/stdio/perror.c (_perror_r): Likewise.
+	* libc/string/strerror_r.c (strerror_r): Likewise.
+	* libc/string/xpg_strerror_r.c (__xpg_strerror_r): Likewise.
+
+2011-05-19  Yaakov Selkowitz  <yselkowitz@users.sourceforge.net>
+
+	* libc/include/stdio_ext.h: New header.
+	* libc/stdio/fpurge.c [!__rtems__] (__fpurge): New function.
+
+2011-05-19  Matthew Gretton-Dann  <matthew.gretton-dann@arm.com>
+
+	* Makefile.am (install-data-local): Fix condition and rm call.
+	* Makefile.in: Regenerate.
+
+2011-05-16  Yaakov Selkowitz  <yselkowitz@users.sourceforge.net>
+
+	* libc/include/time.h (CLOCK_PROCESS_CPUTIME_ID): Rename from
+	CLOCK_PROCESS_CPUTIME.
+	(CLOCK_THREAD_CPUTIME_ID): Rename from CLOCK_THREAD_CPUTIME.
+	* libc/include/sys/features.h [__CYGWIN__] (_POSIX_CPUTIME): Define.
+	(_POSIX_THREAD_CPUTIME): Define.
+
+2011-05-16  Christian Bruel  <christian.bruel@st.com>
+
+	* libc/stdlib/strtod.c (_strtod_r): Fix nf/nd counts to not exceed
+	DBL_DIG.
+
+2011-05-15  Corinna Vinschen  <vinschen@redhat.com>
+
+	* libc/include/sys/features.h (_POSIX_THREAD_ATTR_STACKADDR): Define
+	to 200112L for Cygwin.
+
+2011-05-12  Peter Rosin  <peda@lysator.liu.se>
+
+	* libc/time/strptime.c (strptime): Fill in tm_yday when all of tm_year,
+	tm_mon and tm_mday are updated. Fill in tm_mon, tm_mday and tm_wday
+	when both of tm_year and tm_yday are updated.
+
+2011-05-12  Peter Rosin  <peda@lysator.liu.se>
+
+	* libc/time/strptime.c (first_day): Actually return the wday
+	of the first day of the year.
+
+2011-05-10  Corinna Vinschen  <vinschen@redhat.com>
+
+	* libc/locale/lmessages.c (_C_messages_locale): Add missing comma.
+
+2011-05-04  Yaakov Selkowitz  <yselkowitz@users.sourceforge.net>
+
+	* libc/include/signal.h (psignal): Declare.
+	* libc/sys/linux/psignal.c: Move from here...
+	* libc/signal/psignal.c: ... to here. Document.
+	* libc/sys/linux/Makefile.am (GENERAL_SOURCES): Move psignal.c from here...
+	* libc/signal/Makefile.am (LIB_SOURCES): ... to here.
+	(CHEWOUT_FILES): Add psignal.def.
+	* libc/sys/linux/Makefile.in: Regenerate.
+	* libc/signal/Makefile.in: Ditto.
+	* libc/signal/signal.tex: Add references to psignal.
+
+2011-05-04  Corinna Vinschen  <vinschen@redhat.com>
+
+	* libc/locale/lmessages.h (__messages_load_locale): Declare.  Remove
+	accidental declaration of __numeric_load_locale.
+	* libc/locale/locale.c: Include timelocal.h to get declaration of
+	__time_load_locale.
+	(__set_locale_from_locale_alias): Fix return type.
+	(__locale_msgcharset): Avoid compiler warnings.
+	(_localeconv_r): Ditto.
+
+2011-05-04  Andy Koppe  <andy.koppe@gmail.com>
+
+	* libc/locale/locale.c (current_categories): On Cygwin, set LC_CTYPE 
+	to C.UTF-8 to match initial __wctomb and __mbtowc settings.
+	(lc_ctype_charset): On Cygwin, initialize to "UTF-8".
+	(loadlocale): Remove unused Cygwin-specifc code.
+
+2011-05-02  Yaakov Selkowitz  <yselkowitz@users.sourceforge.net>
+
+	* libc/include/sys/features.h [__CYGWIN__] (_POSIX_SPIN_LOCKS): Define.
+	* libc/include/sys/types.h: Cygwin provides its own pthread_spinlock_t
+	typedef.
+
+2011-04-19  Corinna Vinschen  <vinschen@redhat.com>
+
+	* libc/include/sys/signal.h (_sig_func_ptr): Define with int parameter
+	per POSIX.  Explain in comment.
+
+2011-04-15  Eric Blake  <eblake@redhat.com>
+
+	* libc/string/strchrnul.c (strchrnul): Fix strchrnul.
+
+2011-03-27  Yaakov Selkowitz  <yselkowitz@users.sourceforge.net>
+
+	* libc/include/string.h (strchrnul): Declare.
+	* libc/string/strchrnul.c: New file.
+	* libc/string/Makefile.am (ELIX_2_SOURCES): Add strchrnul.c.
+	* libc/string/Makefile.in: Regenerate.
+
+2011-03-23  Nick Clifton  <nickc@redhat.com>
+
+	* libc/machine/frv/setjmp.S: Fix typo in .size directive.
+
+2011-03-21  Kevin Buettner  <kevinb@redhat.com>
+
+	* libc/sys/sysnecv850/trap.S (___trap0): Fix errno handling.
+	* libc/sys/sysnecv850/rename.c: New file.
+	* libc/sys/sysnecv850/Makefile.am (lib_a_SOURCES): Add rename.c
+	* libc/sys/sysnecv850/Makefile.in: Regenerate.
+	* libc/sys/sysnecv850/fstat.c (_fstat): Invoke trap for SYS_fstat.
+	* libc/sys/sysnecv850/unlink.c (_unlink): Invoke trap for SYS_unlink.
+
+2011-03-03  Corinna Vinschen  <vinschen@redhat.com>
+
+	* libc/include/string.h: Include sys/cdefs.h.
+
+2011-03-03  Corinna Vinschen  <vinschen@redhat.com>
+
+	* libc/include/sys/cdefs.h (__CONCAT1): Define.
+	(__CONCAT): Define.
+	(__STRING): Define.
+	(__XSTRING): Define.
+	(__ASMNAME): Define.
+	* libc/include/string.h (strerror_r): Use __ASMNAME to take target
+	specific label prefixes into account.
+
+2011-03-01  Aaron Landwehr <snaphat@gmail.com>
+
+	* libm/complex/cproj.c: Fix typo.
+	* libm/complex/cprojf.c: Ditto.
+
+2011-02-22  Corinna Vinschen  <vinschen@redhat.com>
+
+	* libc/stdio/fmemopen.c (fmemopen): Fix EINVAL condition.  Avoid SEGV
+	if incoming buffer is NULL.
+
+2011-02-09  Eric Blake  <eblake@redhat.com>
+
+	* libc/include/string.h (strerror_r): Update declaration.
+	* libc/string/strerror.c (strerror): Update documentation.
+	* libc/string/strerror_r.c (strerror_r): Always return
+	NUL-terminated string; don't overwrite too-short buf.
+	* libc/string/xpg_strerror_r.c (__xpg_strerror_r): Implement POSIX
+	variant.
+	* libc/string/Makefile.am (GENERAL_SOURCES): Build new file.
+	* libc/string/Makefile.in: Regenerate.
+
+2011-01-28  Corinna Vinschen  <vinschen@redhat.com>
+
+	* libc/stdio/fclose.c: Only use sfp lock to guard non-atomic
+	changes of flags and fp lock.
+	* libc/stdio/freopen.c: Ditto.
+	* libc/stdio64/freopen64.c: Ditto.
+	* libc/stdio/fgetc.c: Revert change from 2009-04-24, remove sfp locks
+	which guard entire function to avoid potential deadlocks when using
+	stdio functions in multiple thraeds.
+	* libc/stdio/fgets.c: Ditto.
+	* libc/stdio/fgetwc.c: Ditto.
+	* libc/stdio/fgetws.c: Ditto.
+	* libc/stdio/fread.c: Ditto.
+	* libc/stdio/fseek.c: Ditto.
+	* libc/stdio/getc.c: Ditto.
+	* libc/stdio/getdelim.c: Ditto.
+	* libc/stdio/gets.c: Ditto.
+	* libc/stdio/vfscanf.c: Ditto.
+	* libc/stdio/vfwscanf.c: Ditto.
+
+	* libc/stdio/fflush.c (_fflush_r): Split out core functionality into
+	new function __sflush_r.  Just lock file and call __sflush_r from here.
+	* libc/stdio/fwalk.c (_fwalk): Remove static helper function and move
+	functionality back into main function. Don't walk a file with flags
+	value of 1.  Add comment.
+	(_fwalk_reent): Ditto.
+	* libc/stdio/local.h (__sflush_r): Declare.
+	* libc/stdio/refill.c (__srefill): Before calling fwalk, set flags
+	value to 1 so this file pointer isn't walked.  Revert flags afterwards
+	and call __sflush_r for this fp if necessary.  Add comments.
+
+2011-01-27  Corinna Vinschen  <vinschen@redhat.com>
+
+	* libc/include/sys/features.h: Define __STDC_ISO_10646__ for Cygwin.
+	* libc/include/wchar.h: Include features.h.
+
+2011-01-15  Yaakov Selkowitz  <yselkowitz@users.sourceforge.net>
+
+	* libc/include/sys/types.h (ulong): Add typedef.
+
+2011-01-12  Ralf Corsépius  <ralf.corsepius@rtems.org>
+
+	* libm/math/w_tgamma.c: Only build ifndef _DOUBLE_IS_32BITS.
+	* libm/math/wf_tgamma.c: Map tgamma to tgammaf, ifdef _DOUBLE_IS_32BITS.
+
+2011-01-12  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* configure.host: Add noinclude variable to allow specification
+	of header files to remove from installation.
+	* acinclude.m4: Provide NO_INCLUDE_LIST variable based on
+	noinclude variable in configure.host.
+	* configure: Regenerated.
+	* Makefile.am: Remove all header files in NO_INCLUDE_LIST.
+	* Makefile.in: Regenerated.
+
+2011-01-12  Yaakov Selkowitz  <yselkowitz@users.sourceforge.net>
+
+	* libc/sys/linux/sys/signal.h (sig_t): Move from here...
+	* libc/include/signal.h (sig_t): ...to here.
+
+2011-01-10  Corinna Vinschen  <vinschen@redhat.com>
+
+	* libc/machine/mips/strlen.c (strlen): Add delay slot for R3000.
+
+2011-01-10  Joel Sherrill <joel.sherrill@oarcorp.com>
+
+	* libc/include/string.h: Make strsignal() available unconditionally.
+
+2011-01-07  Ralf Corsepius  <ralf.corsepius@rtems.org>
+
+	* libc/sys/rtems/crt0.c: Adjust free() and calloc() to match their
+	public decls.
+
+2011-01-05  Ralf Corsepius  <ralf.corsepius@rtems.org>
+
+	* Makefile.am: Move cleaning targ-include to clean-local.
+	* Makefile.in: Regenerate.
+
+2011-01-05  Ralf Corsepius  <ralf.corsepius@rtems.org>
+
+	* libc/stdio/open_memstream.c (internal_open_memstream_r):
+	Don't limit c->max to 64*1024 on targets with SIZE_MAX < 64*1024.
+
+2011-01-05  Ralf Corsepius  <ralf.corsepius@rtems.org>
+
+	* libc/xdr/xdr.c: Fix typos in #errors.
+
+2011-01-05  Ralf Corsepius  <ralf.corsepius@rtems.org>
+
+	* libc/xdr/xdr_private.h: Include <stdint.h>
+	* libc/xdr/xdr_rec.c: Include limits.h
+
+2011-01-05  Ralf Corsepius  <ralf.corsepius@rtems.org>
+
+	* libc/Makefile.am (SUBDEFS): Remove redundant posix/stmp-def.
+	* libc/Makefile.in: Regenerate.
+
+2011-01-05  Ralf Corsepius  <ralf.corsepius@rtems.org>
+
+	* libc/configure.in: Remove redundant posix_dir processing.
+	* libc/configure: Regenerate.
+
+2010-12-31  Ralf Corsepius  <ralf.corsepius@rtems.org>
+
+	* MAINTAINERS: Change corinna@vinchen.de to corinna@vinschen.de.
+
+2010-12-26  Christopher Faylor  <me+cygwin@cgf.cx>
+
+	* libc/include/sys/errno.h (program_invocation_name): Declare.
+	(program_invocation_short_name): Ditto.
+
 2010-12-16  Jeff Johnston  <jjohnstn@redhat.com>
 
 	* NEWS: Update with 1.19.0 info.
@@ -28,12 +407,12 @@
 
 	* libm/mathfp/sf_logarithm.c: Change isfinitef reference to isfinite.
 
-2010-12-08      Ralf Corsepius <ralf.corsepius@rtems.org>
+2010-12-08  Ralf Corsepius <ralf.corsepius@rtems.org>
 
 	* include/sys/types.h: Add #if defined(__rtems__) around
 	pthread_attr_t.guardsize.
 
-2010-12-08      Joel Sherrill <joel@OARcorp.com>
+2010-12-08  Joel Sherrill <joel@OARcorp.com>
 
 	* include/pthread.h: Add pthread_attr_setstack, pthread_attr_getstack,
 	pthread_attr_getguardsize, pthread_attr_setguardsize.
@@ -1048,13 +1427,13 @@
 	* libc/stdlib/atexit.c: Ditto.
 	* libc/stdlib/on_exit.c: Ditto.
 
-2009-12-17  Ralf CorsÃÂ©pius <ralf.corsepius@rtems.org>
+2009-12-17  Ralf Corsépius <ralf.corsepius@rtems.org>
 
 	* libc/include/machine/ieeefp.h: Rework __IEEE_*_ENDIAN handling.
 	* libc/machine/arm/machine/endian.h: Remove (Conflicts with
 	libc/include/machine/endian.h)
 
-2009-12-17  Ralf CorsÃÂ©pius <ralf.corsepius@rtems.org>
+2009-12-17  Ralf Corsépius <ralf.corsepius@rtems.org>
 
 	* libc/include/machine/setjmp.h: Set up _JBLEN #ifdef __m68k__.
 
@@ -1076,11 +1455,11 @@
 	and ETOOMANYREFS into general list as they are referenced
 	by OpenGroup and needed by RTEMS.
 
-2009-12-16  Ralf CorsÃÂ©pius <ralf.corsepius@rtems.org>
+2009-12-16  Ralf Corsépius <ralf.corsepius@rtems.org>
 
 	* libc/search/hcreate.c: Don't include <sys/queue.h> (Unused).
 
-2009-12-16  Ralf CorsÃÂ©pius <ralf.corsepius@rtems.org>
+2009-12-16  Ralf Corsépius <ralf.corsepius@rtems.org>
 
 	* libc/sys/rtems/machine/_types.h: New (Derived from
 	machine/_default_types.h).
@@ -1368,16 +1747,16 @@
 	* libc/locale/locale.c: Drop Cygwin-specific windows.h include.
 	(loadlocale): Call __set_charset_from_codepage with 0 codepage.
 
-2009-09-22  Ralf CorsÃ©pius <ralf.corsepius@rtems.org>
+2009-09-22  Ralf Corsépius <ralf.corsepius@rtems.org>
 
 	* libc/include/stdlib.h: Add posix_memalign.
 
-2009-09-22  Ralf CorsÃ©pius <ralf.corsepius@rtems.org>
+2009-09-22  Ralf Corsépius <ralf.corsepius@rtems.org>
 
 	* configure.host (*-rtems*): Remove -DMISSING_SYSCALL_NAMES.
 	Add -DHAVE_BLKSIZE, -D_NO_WORDEXP -D_NO_POPEN.
 
-2009-09-22  Ralf CorsÃ©pius <ralf.corsepius@rtems.org>
+2009-09-22  Ralf Corsépius <ralf.corsepius@rtems.org>
 
 	* configure.host (m32c): Move setting -DABORT_PROVIDED to second
 	"case $host".
@@ -6455,7 +6834,7 @@
 	* libc/include/sys/unistd.h: Define all _SC_xxx values as
 	required by SUSv3.  Unify formatting.
 
-2007-02-02  Ralf CorsÃ©pius <ralf.corsepius@rtems.org>
+2007-02-02  Ralf Corsépius <ralf.corsepius@rtems.org>
 
 	* libc/include/sys/errno.h: Add ECANCELED.
 
@@ -8432,16 +8811,16 @@
 	* configure.host (newlib_cflags) <cris-*-*, crisv32-*-*>: Add
 	-DCOMPACT_CTYPE.
 
-2005-03-06  Ralf Corsepious  <ralf.corsepius@rtems.org>
+2005-03-06  Ralf Corsepius  <ralf.corsepius@rtems.org>
 
 	* libc/sys/rtems/include/inttypes.h: New file.
 	* libc/sys/rtems/include/stdint.h: Ditto.
 
-2005-03-06  Ralf Corsepious  <ralf.corsepius@rtems.org>
+2005-03-06  Ralf Corsepius  <ralf.corsepius@rtems.org>
 
 	* libc/string/memcmp.c: Fix to avoid pointer signedness warning.
 
-2005-03-06  Ralf Corsepious  <ralf.corsepius@rtems.org>
+2005-03-06  Ralf Corsepius  <ralf.corsepius@rtems.org>
 
 	* libc/include/machine/_types.h: New file.
 	* libc/include/sys/types.h: Do not check for __rtems__
@@ -8450,7 +8829,7 @@
 	* libc/sys/rtems/machine/_types.h: Removed.  Replaced with
 	shared header file.
 
-2005-02-25  Ralf Corsepious  <ralf.corsepius@rtems.org>
+2005-02-25  Ralf Corsepius  <ralf.corsepius@rtems.org>
 
 	* libm/common/fdlibm.h (FLT_UWORD_MAX, FLT_UWORD_HALF_MAX): Add
 	L qualifier for these long constants.
@@ -8466,13 +8845,13 @@
 	* libc/time/strftime.c (strftime): Fix '%x' to deal with negative
 	years.  Fix '%z' to use long, not int.
 
-2005-02-24  Ralf Corsepious  <ralf.corsepius@rtems.org>
+2005-02-24  Ralf Corsepius  <ralf.corsepius@rtems.org>
 
 	* libm/common/s_fpclassify.c: Use __uint32_t instead of int to
 	manipulate float values in integer form.
 	* libm/common/sf_round.c: Ditto.
 
-2005-02-24  Ralf Corsepious  <ralf.corsepius@rtems.org>
+2005-02-24  Ralf Corsepius  <ralf.corsepius@rtems.org>
 
 	* libc/include/sys/types.h [__rtems__]: Include new
 	header file machine/_types.h.

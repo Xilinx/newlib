@@ -46,6 +46,7 @@
 #   crt1_dir            directory where crt1 object is found
 #   have_crt0		"yes"/"no" if crt0 is/isn't provided.
 #			"" if crt0 is provided when sys_dir is set
+#   noinclude		list of include files to not install
 
 newlib_cflags=
 libm_machine_dir=
@@ -58,6 +59,7 @@ stdio64_dir=
 xdr_dir=
 syscall_dir=
 unix_dir=
+noinclude=
 mach_add_setjmp=
 crt1=
 crt1_dir=
@@ -119,9 +121,6 @@ case "${host_cpu}" in
 	;;
   d30v*)
 	machine_dir=d30v
-	;;
-  ep9312)
-	machine_dir=arm
 	;;
   fido)
 	machine_dir=m68k
@@ -239,15 +238,6 @@ case "${host_cpu}" in
 	machine_dir=sparc
 	# FIXME: Might wish to make MALLOC_ALIGNMENT more generic.
 	newlib_cflags="${newlib_cflags} -DMALLOC_ALIGNMENT=8"
-	;;
-  strongarm)
-	machine_dir=arm
-	;;
-  xscale)
-	machine_dir=xscale
-	;;
-  thumb)
-	machine_dir=arm
 	;;
   tic4x|c4x)
 	machine_dir=tic4x
@@ -391,12 +381,6 @@ case "${host}" in
   d30v*)
 	sys_dir=
 	;;
-  ep9312-*-*)
-	sys_dir=arm
-	if [ "x${newlib_may_supply_syscalls}" = "xno" ] ; then
-	  have_crt0="no"
-	fi
-	;;
   frv*)
         sys_dir=
         ;;
@@ -493,18 +477,6 @@ case "${host}" in
 	default_newlib_io_long_long="yes"
 	default_newlib_atexit_dynamic_alloc="no"
 	;;
-  strongarm-*-*)
-	sys_dir=arm
-	if [ "x${newlib_may_supply_syscalls}" = "xno" ] ; then
-	  have_crt0="no"
-	fi
-	;;
-  thumb-*-*)
-	sys_dir=arm
-	if [ "x${newlib_may_supply_syscalls}" = "xno" ] ; then
-	  have_crt0="no"
-	fi
-	;;
   tic6x*)
 	newlib_cflags="${newlib_cflags} -DMISSING_SYSCALL_NAMES"
 	have_crt0="no"
@@ -526,12 +498,6 @@ case "${host}" in
 	;;
   w65-*-*)
 	sys_dir=w65
-	;;
-  xscale-*-*)
-	sys_dir=arm
-	if [ "x${newlib_may_supply_syscalls}" = "xno" ] ; then
-	  have_crt0="no"
-	fi
 	;;
   z8k-*-coff)
 	sys_dir=z8ksim
@@ -594,7 +560,6 @@ case "${host}" in
 # to create the program's environment.
 # If --disable-newlib-supplied-syscalls is specified, then the end-user
 # may specify the protocol via gcc spec files supplied by libgloss.
-# See also thumb below.
 	if [ "x${newlib_may_supply_syscalls}" = "xyes" ] ; then
 #         newlib_cflags="${newlib_cflags} -DARM_RDP_MONITOR"
 	  newlib_cflags="${newlib_cflags} -DARM_RDI_MONITOR"
@@ -628,12 +593,6 @@ case "${host}" in
   d30v*)
 	newlib_cflags="${newlib_cflags} -DABORT_MESSAGE -DSMALL_MEMORY -DMISSING_SYSCALL_NAMES"
 	syscall_dir=
-	;;
-  ep9312-*-*)
-	syscall_dir=syscalls
-	if [ "x${newlib_may_supply_syscalls}" = "xyes" ] ; then
-	  newlib_cflags="${newlib_cflags} -DARM_RDI_MONITOR"
-	fi
 	;;
   fido-*-elf)
 	newlib_cflags="${newlib_cflags} -DHAVE_RENAME -DHAVE_SYSTEM -DMISSING_SYSCALL_NAMES"
@@ -758,27 +717,6 @@ case "${host}" in
 		newlib_cflags="${newlib_cflags} -DTARGET_PTR_SIZE=64" ;;
 	esac
 	;;
-  strongarm-*-*)
-	syscall_dir=syscalls
-	;;
-  thumb-*-pe)
-	syscall_dir=syscalls
-# Don't use the debugging protocols just yet.
-	;;
-  thumb-*-*)
-	syscall_dir=syscalls
-# If newlib is supplying syscalls, select which debug protocol is being used.
-# ARM_RDP_MONITOR selects the Demon monitor.
-# ARM_RDI_MONITOR selects the Angel monitor.
-# If neither are defined, then hard coded defaults will be used
-# to create the program's environment.
-# If --disable-newlib-supplied-syscalls is specified, then the end-user
-# may specify the protocol via gcc spec files supplied by libgloss.
-	if [ "x${newlib_may_supply_syscalls}" = "xyes" ] ; then
-#         newlib_cflags="${newlib_cflags} -DARM_RDP_MONITOR"
-	  newlib_cflags="${newlib_cflags} -DARM_RDI_MONITOR"
-	fi
-	;;
   tic6x*)
 	syscall_dir=
 	newlib_cflags="${newlib_cflags} -DCLOCK_PROVIDED"
@@ -796,13 +734,6 @@ case "${host}" in
   xc16x-*)
           syscall_dir=syscalls
         ;;
-  xscale-*-*)
-	syscall_dir=syscalls
-	newlib_cflags="${newlib_cflags} -DHAVE_SYSTEM -DHAVE_RENAME"
-	if [ "x${newlib_may_supply_syscalls}" = "xyes" ] ; then
-	  newlib_cflags="${newlib_cflags} -DARM_RDI_MONITOR"
-	fi
-	;;
   xstormy16-*-*)
 	syscall_dir=syscalls
 	;;
@@ -850,6 +781,11 @@ if [ "x${newlib_atexit_dynamic_alloc}" = "x" ]; then
 	if [ ${default_newlib_atexit_dynamic_alloc} = "yes" ]; then
 		newlib_atexit_dynamic_alloc="yes"; 
 	fi
+fi
+
+# Remove rpc headers if xdr_dir not specified
+if [ "x${xdir_dir}" = "x" ]; then
+	noinclude="${noinclude} rpc/types.h rpc/xdr.h"
 fi
 
 if test -z "${have_crt0}" && test -n "${sys_dir}"; then

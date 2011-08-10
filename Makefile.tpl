@@ -6,7 +6,7 @@ in
 #
 # Makefile for directory with subdirs to build.
 #   Copyright (C) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,
-#   1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009
+#   1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010
 #   Free Software Foundation
 #
 # This file is free software; you can redistribute it and/or modify
@@ -102,8 +102,6 @@ TOPLEVEL_CONFIGURE_ARGUMENTS=@TOPLEVEL_CONFIGURE_ARGUMENTS@
 
 tooldir = @tooldir@
 build_tooldir = @build_tooldir@
-
-GDB_NLM_DEPS = 
 
 # This is the name of the environment variable used for the path to
 # the libraries.
@@ -242,10 +240,13 @@ POSTSTAGE1_CXX_EXPORT = \
 	CXX="$(STAGE_CC_WRAPPER) $$r/$(HOST_SUBDIR)/prev-gcc/g++$(exeext) \
 	  -B$$r/$(HOST_SUBDIR)/prev-gcc/ -B$(build_tooldir)/bin/ -nostdinc++ \
 	  -B$$r/prev-$(TARGET_SUBDIR)/libstdc++-v3/src/.libs \
+	  -B$$r/prev-$(TARGET_SUBDIR)/libstdc++-v3/libsupc++/.libs \
 	  -I$$r/prev-$(TARGET_SUBDIR)/libstdc++-v3/include/$(TARGET_SUBDIR) \
 	  -I$$r/prev-$(TARGET_SUBDIR)/libstdc++-v3/include \
 	  -I$$s/libstdc++-v3/libsupc++ \
-	  -L$$r/prev-$(TARGET_SUBDIR)/libstdc++-v3/src/.libs"; export CXX; \
+	  -L$$r/prev-$(TARGET_SUBDIR)/libstdc++-v3/src/.libs \
+	  -L$$r/prev-$(TARGET_SUBDIR)/libstdc++-v3/libsupc++/.libs"; \
+	  export CXX; \
 	CXX_FOR_BUILD="$$CXX"; export CXX_FOR_BUILD;
 @endif target-libstdc++-v3-bootstrap
 
@@ -321,11 +322,13 @@ HOST_CLOOGINC = @clooginc@
 HOST_LIBELFLIBS = @libelflibs@
 HOST_LIBELFINC = @libelfinc@
 
+EXTRA_CONFIGARGS_LIBJAVA = @EXTRA_CONFIGARGS_LIBJAVA@
+
 # ----------------------------------------------
 # Programs producing files for the BUILD machine
 # ----------------------------------------------
 
-SHELL = @config_shell@
+SHELL = @SHELL@
 
 # pwd command to use.  Allow user to override default by setting PWDCMD in
 # the environment to account for automounters.  The make variable must not
@@ -418,6 +421,7 @@ TFLAGS =
 STAGE_CFLAGS = $(BOOT_CFLAGS)
 STAGE_TFLAGS = $(TFLAGS)
 STAGE_CONFIGURE_FLAGS=@stage2_werror_flag@
+POSTSTAGE1_CONFIGURE_FLAGS = @POSTSTAGE1_CONFIGURE_FLAGS@
 
 [+ FOR bootstrap-stage +]
 # Defaults for stage [+id+]; some are overridden below.
@@ -428,7 +432,10 @@ STAGE[+id+]_CXXFLAGS = $(CXXFLAGS)
 STAGE[+id+]_CXXFLAGS = $(STAGE[+id+]_CFLAGS)
 @endif target-libstdc++-v3-bootstrap
 STAGE[+id+]_TFLAGS = $(STAGE_TFLAGS)
-STAGE[+id+]_CONFIGURE_FLAGS = $(STAGE_CONFIGURE_FLAGS)
+# STAGE1_CONFIGURE_FLAGS overridden below, so we can use
+# POSTSTAGE1_CONFIGURE_FLAGS here.
+STAGE[+id+]_CONFIGURE_FLAGS = \
+	$(STAGE_CONFIGURE_FLAGS) $(POSTSTAGE1_CONFIGURE_FLAGS)
 [+ ENDFOR bootstrap-stage +]
 
 # Only build the C compiler for stage1, because that is the only one that
@@ -446,6 +453,9 @@ STAGE1_LANGUAGES = @stage1_languages@
 #   the last argument when conflicting --enable arguments are passed.
 # * Likewise, we force-disable coverage flags, since the installed
 #   compiler probably has never heard of them.
+# * Don't remove this, because above we added
+#   POSTSTAGE1_CONFIGURE_FLAGS to STAGE[+id+]_CONFIGURE_FLAGS, which
+#   we don't want for STAGE1_CONFIGURE_FLAGS.
 STAGE1_CONFIGURE_FLAGS = --disable-intermodule $(STAGE1_CHECKING) \
 	  --disable-coverage --enable-languages="$(STAGE1_LANGUAGES)"
 
@@ -496,7 +506,7 @@ CXXFLAGS_FOR_TARGET = @CXXFLAGS_FOR_TARGET@
 
 LIBCFLAGS_FOR_TARGET = $(CFLAGS_FOR_TARGET)
 LIBCXXFLAGS_FOR_TARGET = $(CXXFLAGS_FOR_TARGET) -fno-implicit-templates
-LDFLAGS_FOR_TARGET = 
+LDFLAGS_FOR_TARGET = @LDFLAGS_FOR_TARGET@
 GOCFLAGS_FOR_TARGET = -O2 -g
 
 FLAGS_FOR_TARGET = @FLAGS_FOR_TARGET@
@@ -607,18 +617,6 @@ EXTRA_HOST_FLAGS = \
 	'WINDMC=$(WINDMC)'
 
 FLAGS_TO_PASS = $(BASE_FLAGS_TO_PASS) $(EXTRA_HOST_FLAGS)
-
-# Flags that are concerned with the location of the X11 include files
-# and library files
-#
-# NOTE: until the top-level is getting the values via autoconf, it only
-# causes problems to have this top-level Makefile overriding the autoconf-set
-# values in child directories.  Only variables that don't conflict with
-# autoconf'ed ones should be passed by X11_FLAGS_TO_PASS for now.
-#
-X11_FLAGS_TO_PASS = \
-	'X11_EXTRA_CFLAGS=$(X11_EXTRA_CFLAGS)' \
-	'X11_EXTRA_LIBS=$(X11_EXTRA_LIBS)'
 
 # Flags to pass to stage2 and later makes.
 
@@ -1404,6 +1402,13 @@ ENDIF raw_cxx +]
 @endif target-[+module+]
 [+ ENDFOR recursive_targets +]
 [+ ENDFOR target_modules +]
+
+@if target-libmudflap
+.PHONY: check-target-libmudflap-c++
+check-target-libmudflap-c++:
+	$(MAKE) RUNTESTFLAGS="$(RUNTESTFLAGS) c++frags.exp" check-target-libmudflap
+
+@endif target-libmudflap
 
 # ----------
 # GCC module

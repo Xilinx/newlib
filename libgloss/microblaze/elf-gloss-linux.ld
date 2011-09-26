@@ -1,8 +1,8 @@
 /* Default linker script, for normal executables */
-OUTPUT_FORMAT("elf32-microblaze", "",
-	      "")
+/*OUTPUT_FORMAT("elf32-microblaze", "", "") */
 /*SEARCH_DIR("/proj/fv1/gnu_builds/head/mb/release/lin/mb/microblaze-xilinx-elf/lib");*/
 /*SEARCH_DIR("/proj/fv1/gnu_builds/head/mb/release/lin/mb/microblaze-xilinx-elf/lib");*/
+OUTPUT_ARCH(microblaze)
 ENTRY(_start)
 _TEXT_START_ADDR = DEFINED(_TEXT_START_ADDR) ? _TEXT_START_ADDR : 0x50;
 

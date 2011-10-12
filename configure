@@ -3294,6 +3294,8 @@ case "${target}" in
     ;;
   m68k-*-*)
     ;;
+  microblaze*)
+    ;;
   mips*-*-rtems*)
     ;;
   mips*-*-linux*)
@@ -3459,6 +3461,9 @@ case "${target}" in
     ;;
   m68*-*-* | fido-*-*)
     libgloss_dir=m68k
+    ;;
+  microblaze*)
+    libgloss_dir=microblaze
     ;;
   mips*-*-*)
     libgloss_dir=mips

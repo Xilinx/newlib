@@ -1,3 +1,117 @@
+2011-10-11  Steven Abner <pheonix@zoomtown.com>
+
+	* libc/time/mktm_r.c: (__tzcalc_limits) Fix Julian day calculation.
+	* libc/time/mktime.c: (mktime) Fix tm_yday, tm_mday updating when
+	timezone causes roll over.
+
+2011-10-10  Nick Clifton  <nickc@redhat.com>
+
+	* libc/sys/arm/crt0.S: Synchronise with libgloss version.
+	* libc/sys/arm/arm.h: Imported from libgloss.
+
+2011-10-04  Greta Yorsh  <Greta.Yorsh@arm.com>
+
+	* testsuite/newlib.string/memcpy-1.c: New test.
+
+2011-10-04  Nick Clifton  <nickc@redhat.com>
+
+	* libc/machine/arm/memcpy.S: Fix unaligned access copying.
+
+2011-09-29  Greta Yorsh  <Greta.Yorsh@arm.com>
+
+	* libc/machine/arm/memcpy.S: New file.  Contains a hand coded
+	memcpy function optimized for the cortex-a15.
+	* libc/machine/arm/memcpy-stub.c: New file.
+	* libc/machine/arm/Makefile.am (lib_a_SOURCES): Add memcpy-stub.c,
+	memcpy.S.
+	* libc/machine/arm/Makefile.in: Regenerate.
+
+2011-09-08  Jeff Johnston  <jjohnstn@redhat.com>
+
+	* testsuite/lib/flags.exp: Add logic to add the
+	srcdir include directory to compile flags.
+
+2011-08-26  Steven Abner  <pheonix@zoomtown.com>
+
+	* libc/time/mktm_r.c (_mktm_r): Fix previous fix.
+
+2011-08-24  Corinna Vinschen  <vinschen@redhat.com>
+
+	* libc/time/mktm_r.c (_mktm_r): Fix computing tm_year.
+
+2011-08-23  Ralf Corsépius  <ralf.corsepius@rtems.org>
+
+	* libc/stdlib/putenv_r.c: Use "strchr" instead of obsolete "index".
+	* libc/stdlib/setenv_r.c: Use "memcpy" instead of obsolete "bcopy".
+
+2011-08-23  Ralf Corsépius  <ralf.corsepius@rtems.org>
+
+	* libc/misc/ffs.c, libc/string/bcmp.c, libc/string/bcopy.c,
+	libc/string/bzero.c, libc/string/index.c, libc/string/rindex.c,
+	libc/string/strcasecmp.c, libc/string/strncasecmp.c:
+	Let synopsis reference "#include <strings.h>".
+
+2011-08-23  Ralf Corsépius  <ralf.corsepius@rtems.org>
+
+	* libc/posix/regexec.c: Define "nope" only #ifndef NDEBUG.
+	* libc/stdio/vfscanf.c: Define "state" only #ifdef _MB_CAPABLE.
+	* libc/string/wcwidth.c: Include <wctypes.h> for "iswprint" and
+	"iswcntrl".
+
+2011-08-23  Ralf Corsépius  <ralf.corsepius@rtems.org>
+
+	* libc/sys/rtems/include/limits.h: Compute SSIZE_MAX based on
+	__SIZE_MAX__, __SIZEOF_SIZE_T__ and __CHAR_BIT__.
+
+2011-08-22  Ralf Corsépius <ralf.corsepius@rtems.org>
+
+	* libc/string/index.c: Include <strings.h> for "index".
+	* libc/string/rindex.c: Include <strings.h> for "rindex".
+	* libc/string/strcasecmp.c: Include <strings.h> for "strcasecmp".
+	Don't include <string.h>.
+	* libc/string/strncasecmp.c: Include <strings.h> for "strncasecmp".
+	Don't include <string.h>.
+	* libc/string/bzero.c: Include <strings.h> for "bzero".
+	Don't include <string.h>
+	* libc/misc/ffs.c: Include <strings.h> for "ffs".
+	Don't include <_ansi.h>.
+
+2011-08-19  Ralf Corsépius <ralf.corsepius@rtems.org>
+
+	* libc/sys/rtems/crt0.c: Rework RTEMS_STUB macro.
+	Include <unistd.h>.
+	Remove C++-style comments.
+	Remove hppa, a29k.
+	Add clock_gettime, gettimeofday, sched_yield.
+
+2011-08-19  Ralf Corsépius <ralf.corsepius@rtems.org>
+
+	* libc/stdio/vasiprintf.c: Include "local.h" for "_svfiprintf_r".
+	* libc/stdio/vasprintf.c Include "local.h" for "_svfprintf_r".
+	* libc/stdio/vsiprintf.c: Include "local.h" for "_svfiprintf_r".
+	* libc/stdio/vsniprintf.c: Include "local.h" for "_svfiprintf_r".
+	* libc/stdio/vsnprintf.c: Include "local.h" for "_svfprintf_r"
+	* libc/stdio/vsprintf.c: Include "local.h" for "_svfprintf_r"
+
+2011-08-19  Ralf Corsépius <ralf.corsepius@rtems.org>
+
+	* libc/string/bcmp.c: Include <strings.h> for "bcmp".
+	* libc/string/bcopy.c: Include <strings.h> for "bcopy".
+	* libc/string/strcasestr.c: Include <strings.h> for "strncasecmp".
+	* libc/time/strptime.c: Include <strings.h> for "strncasecmp".
+
+2011-08-19  Corinna Vinschen  <vinschen@redhat.com>
+
+	* libc/include/process.h: Remove exec family function declarations.
+	Add comment.
+	* libc/include/sys/unistd.h (execlpe): Declare for Cygwin.
+
+2011-08-19  Craig Howland  <howland@LGSInnovations.com>
+
+	* libc/time/mktime.c (validate_structure): Account for tm_mon possibly
+	being given as negative.
+	(mktime): Set tm_isdst=0 when !daylight.
+
 2011-08-01  Sebastian Huber <sebastian.huber@embedded-brains.de>
 
 	* libc/include/sys/types.h: XML and RTEMS define

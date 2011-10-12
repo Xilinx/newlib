@@ -26,37 +26,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _LIBGLOSS_ARM_H
-#define _LIBGLOSS_ARM_H
+/* The sole purpose of this file is to include the plain memcpy provided in newlib.  
+   An optimized version of memcpy is provided in the assembly file memcpy.S in this directory. */
+#if (defined (__OPTIMIZE_SIZE__) || defined (PREFER_SIZE_OVER_SPEED) || \
+     (!(defined (__ARM_ARCH_7A__))))
 
-/* __thumb2__ stands for thumb on armva7(A/R/M/EM) architectures,
-   __ARM_ARCH_6M__ stands for armv6-M(thumb only) architecture,
-   __ARM_ARCH_7M__ stands for armv7-M(thumb only) architecture.
-   __ARM_ARCH_7EM__ stands for armv7e-M(thumb only) architecture.
-   There are some macro combinations used many times in libgloss/arm,
-   like (__thumb2__ || (__thumb__ && __ARM_ARCH_6M__)), so factor
-   it out and use THUMB_V7_V6M instead, which stands for thumb on
-   v6-m/v7 arch as the combination does.  */
-#if defined(__thumb2__) || (defined(__thumb__) && defined(__ARM_ARCH_6M__))
-# define THUMB_V7_V6M
+#include "../../string/memcpy.c"
+
+#else
+        /* Do nothing. See memcpy.S in this directory. */
 #endif
-
-/* The (__ARM_ARCH_7EM__ || __ARM_ARCH_7M__ || __ARM_ARCH_6M__) combination
-   stands for cortex-M profile architectures, which don't support ARM state.
-   Factor it out and use THUMB_V7M_V6M instead.  */
-#if defined(__ARM_ARCH_7M__)     \
-    || defined(__ARM_ARCH_7EM__) \
-    || defined(__ARM_ARCH_6M__)
-# define THUMB_V7M_V6M
-#endif
-
-/* Defined if this target supports the BLX Rm instruction.  */
-#if  !defined(__ARM_ARCH_2__)   \
-  && !defined(__ARM_ARCH_3__)	\
-  && !defined(__ARM_ARCH_3M__)	\
-  && !defined(__ARM_ARCH_4__)	\
-  && !defined(__ARM_ARCH_4T__)
-# define HAVE_CALL_INDIRECT
-#endif
-
-#endif /* _LIBGLOSS_ARM_H */

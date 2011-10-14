@@ -76,7 +76,7 @@ OBJCOPY = `if [ -f ${objroot}/../binutils/objcopy ] ; \
 	else t='$(program_transform_name)'; echo objcopy | sed -e $$t ; fi`
 
 CRT = crt0.o crt1.o crt2.o crt3.o crt4.o crtinit.o pgcrtinit.o sim-crtinit.o sim-pgcrtinit.o
-LIB = libgloss.a
+LIB = libxil.a
 OBJS = fstat.o getpid.o isatty.o kill.o lseek.o open.o print.o putnum.o sbrk.o stat.o unlink.o write.o read.o close.o moddi3.o timer.o xil_printf.o errno.o _exception_handler.o _hw_exception_handler.o _interrupt_handler.o _program_clean.o _program_init.o xil_malloc.o xil_sbrk.o setjmp.o longjmp.o
 SCRIPTS	= xilinx.ld
 

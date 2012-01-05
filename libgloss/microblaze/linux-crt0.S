@@ -39,3 +39,20 @@ _start:
         addik   r5, r3, 0
 	.size _start, . - _start
         .end _start
+
+	/* Replacement for the GCC provided crti.S. This one avoids the
+	   setup of stack protection regs (which result in privilieged
+	   insn exceptions when running in user-space).  */
+        .section .init, "ax"
+	.global __init
+	.align 2
+__init:
+	addik   r1, r1, -8
+	sw      r15, r0, r1
+
+	.section .fini, "ax"
+	.global __fini
+	.align 2
+__fini:
+	addik   r1, r1, -8
+	sw      r15, r0, r1

@@ -11,4 +11,4 @@
 -start-group -lgloss-linux -lxil-linux -lc -lm -end-group
 
 *startfile:
-linux-crt0%O%s crti%O%s crtbegin%O%s
+linux-crt0%O%s crtbegin%O%s

@@ -228,6 +228,9 @@ int	_EXFUN(sprintf, (char *, const char *, ...)
 int	_EXFUN(remove, (const char *));
 int	_EXFUN(rename, (const char *, const char *));
 #endif
+void    _EXFUN(xil_printf, (const char*, ...));
+void    _EXFUN(putnum, (unsigned int ));
+void    _EXFUN(print, (char* ));
 #if !defined(__STRICT_ANSI__) || defined(__USE_XOPEN2K)
 #ifdef _COMPILING_NEWLIB
 int	_EXFUN(fseeko, (FILE *, _off_t, int));

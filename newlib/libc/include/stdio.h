@@ -222,6 +222,9 @@ int	_EXFUN(sprintf, (char *__restrict, const char *__restrict, ...)
                _ATTRIBUTE ((__format__ (__printf__, 2, 3))));
 int	_EXFUN(remove, (const char *));
 int	_EXFUN(rename, (const char *, const char *));
+void    _EXFUN(xil_printf, (const char*, ...));
+void    _EXFUN(putnum, (unsigned int ));
+void    _EXFUN(print, (char* ));
 #ifdef _COMPILING_NEWLIB
 int	_EXFUN(_rename, (const char *, const char *));
 #endif

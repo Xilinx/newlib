@@ -2020,7 +2020,7 @@ LIB_AM_PROG_AS
 
 
 host_makefile_frag=${srcdir}/../config/default.mh
-target_makefile_frag=${srcdir}/../config/default.mt
+target_makefile_frag=${srcdir}/../config/microblaze.mt
 
 host_makefile_frag_path=$host_makefile_frag
 

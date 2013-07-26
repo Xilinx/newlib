@@ -35,7 +35,7 @@ LIB_AM_PROG_AS
 AC_SUBST(bsp_prefix)
 
 host_makefile_frag=${srcdir}/../config/default.mh
-target_makefile_frag=${srcdir}/../config/default.mt
+target_makefile_frag=${srcdir}/../config/microblaze.mt
 
 dnl We have to assign the same value to other variables because autoconf
 dnl doesn't provide a mechanism to substitute a replacement keyword with

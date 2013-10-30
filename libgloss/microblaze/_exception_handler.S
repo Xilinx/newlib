@@ -36,5 +36,4 @@
 	.type _exception_handler, @function
 	
 	_exception_handler:
-	addi r11,r11,8
 	bra r11
